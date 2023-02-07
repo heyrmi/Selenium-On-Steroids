@@ -1,3 +1,5 @@
+[![Test](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/test.yml)
+
 # Selenium-On-Steroids
 
 Selenium On Steroids was made for POC on selenoid.
@@ -11,4 +13,3 @@ Selenium On Steroids was made for POC on selenoid.
 - [ ] Slack Integration
 - [x] Allure Docker Service
 - [ ] Github workflows for test execution
-
