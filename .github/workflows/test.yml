@@ -30,6 +30,10 @@ jobs:
 
       - name: Upload Allure Results
         run: echo "Will run shell script here" # sh sendResultsSecurely.sh
-
-      - name: Send slack alert
-        run: echo "Will add a script to send slack alerts" #To be done
+        
+      - name: Send Slack Message
+        # Will contain Allure Reports URL in the data block
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":":test: Test completed"}' 
+          ${{ secrets.SLACK_WEBHOOK_URL }}
