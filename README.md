@@ -10,6 +10,6 @@ Selenium On Steroids was made for POC on selenoid.
 - [x] Selenide
 - [x] Test Logging
 - [x] Allure Reports
-- [ ] Slack Integration
+- [x] Slack Integration
 - [x] Allure Docker Service
 - [x] Github workflows for test execution
