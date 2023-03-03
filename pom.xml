@@ -21,11 +21,11 @@
 
   <dependencies>
 
-    <dependency>
+    <!-- <dependency>
       <groupId>com.codeborne</groupId>
       <artifactId>selenide</artifactId>
       <version>6.11.2</version>
-    </dependency>
+    </dependency> -->
 
     <dependency>
       <groupId>org.selenide</groupId>
