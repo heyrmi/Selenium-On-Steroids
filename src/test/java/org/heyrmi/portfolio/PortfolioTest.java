@@ -3,26 +3,27 @@ package org.heyrmi.portfolio;
 import com.codeborne.selenide.junit5.TextReportExtension;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
+
 import org.heyrmi.pages.portfolio.HomePage;
 import org.heyrmi.urls.URL;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.heyrmi.RemoteExecution;
 
 import static com.codeborne.selenide.Selenide.open;
 
-@ExtendWith({TextReportExtension.class})
+@ExtendWith({ TextReportExtension.class, RemoteExecution.class })
 public class PortfolioTest {
 
     @BeforeEach
     void setUp() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(false).savePageSource(false));
     }
 
     @Test
     @DisplayName("Regression Test of Portfolio Website")
     @Tag("Regression")
-
-    void regressionTestPortfolioWebsite(){
+    void regressionTestPortfolioWebsite() {
         open(URL.getPORTFOLIO_WEBSITE_URL());
 
         HomePage.getHomepageInstance()
@@ -41,8 +42,8 @@ public class PortfolioTest {
     @Test
     @DisplayName("Smoke Test of Portfolio Website")
     @Tag("Smoke")
-    //@Disabled
-    void smokeTestPortfolioWebsite(){
+    // @Disabled
+    void smokeTestPortfolioWebsite() {
         open(URL.getPORTFOLIO_WEBSITE_URL());
 
         HomePage.getHomepageInstance()
@@ -52,6 +53,5 @@ public class PortfolioTest {
                 .goToSearchPage()
                 .testSearchPage();
     }
-
 
 }

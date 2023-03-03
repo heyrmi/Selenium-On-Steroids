@@ -1,0 +1,62 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+  workflow_dispatch:
+
+env:
+  BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+  BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start selenoid server
+        uses: n-ton4/selenoid-github-action@master
+        continue-on-error: false
+        with:
+          version: 1.10.1
+          args: -limit 10
+          browsers: chrome
+          last-versions: 1
+
+      - name: Check Selenoid has been started
+        run: curl http://localhost:4444/status
+
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
+      - name: Maven Test
+        run: mvn clean test -Drunmode=selenoid --no-transfer-progress
+
+      - name: Read value from Properties-file
+        id: read_property
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: "./src/test/resources/config.properties"
+          properties: "sendallureresults"
+
+      - name: Result Sending
+        if: steps.read_property.outputs.sendallureresults == 'yes'
+        run: bash sendResultsSecurely.sh
+
+      - name: Send Slack Message
+        # Will contain Allure Reports URL in the data block
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":":test: Test completed"}' 
+          ${{ secrets.SLACK_WEBHOOK_URL }}
