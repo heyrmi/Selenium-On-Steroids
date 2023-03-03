@@ -26,7 +26,7 @@ jobs:
         with:
           version: 1.10.1
           args: -limit 10
-          browsers: chrome;
+          browsers: chrome
           last-versions: 1
 
       - if: github.event.inputs.runmode == 'selenoid'
