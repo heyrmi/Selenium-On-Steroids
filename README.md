@@ -2,7 +2,7 @@
 
 # Selenium-On-Steroids
 
-Selenium On Steroids was made for POC on Selenide.
+Selenium On Steroids was made for POC on selenoid.
 
 ### Checklist
 
