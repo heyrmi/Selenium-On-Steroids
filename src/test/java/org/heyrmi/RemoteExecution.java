@@ -1,28 +1,31 @@
 package org.heyrmi;
 
-import com.codeborne.selenide.Configuration;
-import lombok.SneakyThrows;
+import com.codeborne.selenide.WebDriverRunner;
+
 import lombok.extern.slf4j.Slf4j;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.heyrmi.config.ConfigurationManager.configuration;
 
 @Slf4j
+public class RemoteExecution implements BeforeEachCallback, AfterEachCallback {
 
-public class RemoteExecution implements BeforeAllCallback {
-
+    public RemoteWebDriver driver;
     private static final String browserstack_username = System.getenv("BROWSERSTACK_USERNAME");
     private static final String browserstack_access_key = System.getenv("BROWSERSTACK_ACCESS_KEY");
 
     @Override
-    @SneakyThrows
-    public void beforeAll(ExtensionContext extensionContext) {
+    public void beforeEach(ExtensionContext context) throws MalformedURLException {
 
         // Inputs on Execution: Browserstack or Selenoid
 
@@ -30,50 +33,42 @@ public class RemoteExecution implements BeforeAllCallback {
 
             log.info("Runmode:" + configuration().runmode());
 
-            Configuration.remote = configuration().girdURL();
+            // Capabilities to run test in GitHub Runners
+            // If you have Selenoid UI enable: 'enableVideo', 'enableVNC', 'enableLog'
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setCapability("browserName", "chrome");
+            capabilities.setCapability("enableVNC", false);
+            capabilities.setCapability("enableVideo", false);
+            capabilities.setCapability("enableLog", false);
 
-            // Capabilities can be changed later
-            Map<String, Boolean> options = new HashMap<>();
-            options.put("enableVNC", false);
-            options.put("enableVideo", false);
-
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.setBrowserVersion("105.0");
-            Configuration.browserCapabilities = chromeOptions;
-            Configuration.browserCapabilities.setCapability("selenoid:options", options);
-
+            driver = new RemoteWebDriver(new URL(configuration().girdURL()), capabilities);
+            WebDriverRunner.setWebDriver(driver);
         }
 
         else if (configuration().runmode() == "browserstack") {
 
-            // Still to be configured.
-            Configuration.remote = "https://" + browserstack_username + ":" + browserstack_access_key
-                    + "@hub-cloud.browserstack.com/wd/hub";
-
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.setBrowserVersion("109.0");
+            MutableCapabilities capabilities = new MutableCapabilities();
+            capabilities.setCapability("browserName", "Chrome");
             HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
             browserstackOptions.put("os", "Windows");
-            browserstackOptions.put("osVersion", "11");
+            browserstackOptions.put("osVersion", "10");
             browserstackOptions.put("browserVersion", "latest");
-            browserstackOptions.put("projectName", "Selenide");
+            browserstackOptions.put("projectName", "Selenium-On-Steroids");
+            browserstackOptions.put("buildName", "SampleBuild");
             browserstackOptions.put("local", "false");
             browserstackOptions.put("seleniumVersion", "4.8.0");
-            Configuration.browserCapabilities = chromeOptions;
-            Configuration.browserCapabilities.setCapability("bstack:options", browserstackOptions);
+            capabilities.setCapability("bstack:options", browserstackOptions);
 
-            /*
-             * RemoteWebDriver driver = new RemoteWebDriver(
-             * new URL("https://" + browserstack_username + ":" + browserstack_access_key
-             * + "@hub-cloud.browserstack.com/wd/hub"),
-             * capabilities);
-             * 
-             * WebDriverRunner.setWebDriver(driver);
-             */
+            driver = new RemoteWebDriver(new URL("https://" + browserstack_username + ":" + browserstack_access_key
+                    + "@hub-cloud.browserstack.com/wd/hub"),
+                    capabilities);
+
+            WebDriverRunner.setWebDriver(driver);
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(configuration().girdURL());
+    @Override
+    public void afterEach(ExtensionContext context) {
+        WebDriverRunner.closeWebDriver();
     }
 }

@@ -1,4 +1,5 @@
 [![Test](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/test.yml)
+[![Test With Input](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/testwithinputs.yml/badge.svg?branch=main)](https://github.com/heyrmi/Selenium-On-Steroids/actions/workflows/testwithinputs.yml)
 
 # Selenium-On-Steroids
 

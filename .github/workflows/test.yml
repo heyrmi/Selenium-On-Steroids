@@ -8,13 +8,25 @@ on:
   workflow_dispatch:
 
 env:
-  BROWSERSTACK_USERNAME: "USER_NAME"
-  BROWSERSTACK_ACCESS_KEY: "PASS_WORD"
+  BROWSERSTACK_USERNAME: "USER_NAME" #${{ secrets.BROWSERSTACK_USERNAME }}
+  BROWSERSTACK_ACCESS_KEY: "PASS_WORD" #${{ secrets.BROWSERSTACK_ACCESS_KEY }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Start selenoid server
+        uses: n-ton4/selenoid-github-action@master
+        continue-on-error: false
+        with:
+          version: 1.10.1
+          args: -limit 10
+          browsers: chrome
+          last-versions: 1
+
+      - name: Check Selenoid has been started
+        run: curl http://localhost:4444/status
+
       - name: Get code
         uses: actions/checkout@v3
 
@@ -26,11 +38,22 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
-        run: echo "This is a configuration test" # mvn clean test
+        run: mvn clean test -Drunmode=selenoid
 
-      - name: Upload Allure Results
-        run: echo "Will run shell script here" # sh sendResultsSecurely.sh
-        
+      - name: Read value from Properties-file
+        id: read_property
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: "./src/test/resources/config.properties"
+          properties: "sendallureresults"
+
+      - name: Send Allure Results?
+        id: allure-results
+        run: echo "ALLURE_RESULTS=${{ steps.read_property.outputs.sendallureresults }}" >> $GITHUB_OUTPUT
+
+      - if: ${{ steps.allure-results.outputs.ALLURE_RESULTS }} == "yes"
+        run: bash sendResultsSecurely.sh
+
       - name: Send Slack Message
         # Will contain Allure Reports URL in the data block
         run: >

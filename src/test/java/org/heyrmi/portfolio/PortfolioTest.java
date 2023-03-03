@@ -17,13 +17,12 @@ public class PortfolioTest {
 
     @BeforeEach
     void setUp() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(false));
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(false).savePageSource(false));
     }
 
     @Test
     @DisplayName("Regression Test of Portfolio Website")
     @Tag("Regression")
-
     void regressionTestPortfolioWebsite() {
         open(URL.getPORTFOLIO_WEBSITE_URL());
 
