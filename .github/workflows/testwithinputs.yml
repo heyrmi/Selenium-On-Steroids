@@ -1,0 +1,61 @@
+name: Test with inputs
+
+on:
+  workflow_dispatch:
+    inputs:
+      runmode:
+        description: "BrowserStack or Selenoid?"
+        options:
+          - "selenoid"
+          - "browserstack"
+        required: true
+        default: "selenoid"
+        type: choice
+env:
+  BROWSERSTACK_USERNAME: "Dummy_Username" #${{ secrets.BROWSERSTACK_USERNAME }}
+  BROWSERSTACK_ACCESS_KEY: "Dummy_Password" #${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - if: github.event.inputs.runmode == 'selenoid'
+        name: Start selenoid server
+        uses: n-ton4/selenoid-github-action@master
+        continue-on-error: false
+        with:
+          version: 1.10.1
+          args: -limit 10
+          browsers: chrome
+          last-versions: 1
+
+      - if: github.event.inputs.runmode == 'selenoid'
+        name: Check Selenoid has been started
+        run: curl http://localhost:4444/status
+
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
+      - name: Maven Test
+        run: mvn clean test -Drunmode=${{ github.event.inputs.runmode }} --no-transfer-progress
+
+      - name: Read value from Properties-file
+        id: read_property
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: "./src/test/resources/config.properties"
+          properties: "sendallureresults"
+
+      - name: Send Allure Results?
+        id: allure-results
+        run: echo "ALLURE_RESULTS=${{ steps.read_property.outputs.sendallureresults }}" >> $GITHUB_OUTPUT
+
+      - if: ${{ steps.allure-results.outputs.ALLURE_RESULTS }} == "yes"
+        run: bash sendResultsSecurely.sh

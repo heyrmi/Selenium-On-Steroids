@@ -2,7 +2,7 @@
 
 # Selenium-On-Steroids
 
-Selenium On Steroids was made for POC on selenoid.
+Selenium On Steroids was made for POC on Selenide.
 
 ### Checklist
 
@@ -10,6 +10,6 @@ Selenium On Steroids was made for POC on selenoid.
 - [x] Selenide
 - [x] Test Logging
 - [x] Allure Reports
-- [ ] Slack Integration
+- [x] Slack Integration
 - [x] Allure Docker Service
-- [ ] Github workflows for test execution
+- [x] Github workflows for test execution
