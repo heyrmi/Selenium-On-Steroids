@@ -44,7 +44,7 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
-        run: clean test -Drunmode=${{ github.event.inputs.runmode }} --no-transfer-progress
+        run: mvn clean test -Drunmode=${{ github.event.inputs.runmode }} --no-transfer-progress
 
       - name: Read value from Properties-file
         id: read_property
