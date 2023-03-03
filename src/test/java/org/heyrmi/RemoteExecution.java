@@ -2,6 +2,8 @@ package org.heyrmi;
 
 import com.codeborne.selenide.Configuration;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.heyrmi.config.ConfigurationManager.configuration;
+
+@Slf4j
 
 public class RemoteExecution implements BeforeAllCallback {
 
@@ -23,9 +27,12 @@ public class RemoteExecution implements BeforeAllCallback {
         // Inputs on Execution: Browserstack or Selenoid
 
         if (configuration().runmode() == "selenoid") {
+
+            log.info("Runmode:" + configuration().runmode());
+
             Configuration.remote = configuration().girdURL();
 
-            //Capabilities can be changed later
+            // Capabilities can be changed later
             Map<String, Boolean> options = new HashMap<>();
             options.put("enableVNC", false);
             options.put("enableVideo", false);
@@ -39,7 +46,7 @@ public class RemoteExecution implements BeforeAllCallback {
 
         else if (configuration().runmode() == "browserstack") {
 
-            //Still to be configured.
+            // Still to be configured.
             Configuration.remote = "https://" + browserstack_username + ":" + browserstack_access_key
                     + "@hub-cloud.browserstack.com/wd/hub";
 
@@ -56,13 +63,17 @@ public class RemoteExecution implements BeforeAllCallback {
             Configuration.browserCapabilities.setCapability("bstack:options", browserstackOptions);
 
             /*
-            RemoteWebDriver driver = new RemoteWebDriver(
-                    new URL("https://" + browserstack_username + ":" + browserstack_access_key
-                            + "@hub-cloud.browserstack.com/wd/hub"),
-                    capabilities);
-
-            WebDriverRunner.setWebDriver(driver);
-            */
+             * RemoteWebDriver driver = new RemoteWebDriver(
+             * new URL("https://" + browserstack_username + ":" + browserstack_access_key
+             * + "@hub-cloud.browserstack.com/wd/hub"),
+             * capabilities);
+             * 
+             * WebDriverRunner.setWebDriver(driver);
+             */
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(configuration().girdURL());
     }
 }
