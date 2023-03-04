@@ -41,7 +41,7 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
-        run: mvn clean test -Drunmode=selenoid --no-transfer-progress
+        run: mvn clean test -Dselenide.browser=com.providers.SelenoidDriverProvider --no-transfer-progress
 
       - name: Read value from Properties-file
         id: read_property

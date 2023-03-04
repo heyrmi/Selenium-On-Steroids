@@ -44,7 +44,12 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
-        run: mvn clean test -Drunmode=${{ github.event.inputs.runmode }} --no-transfer-progress
+        if: github.event.inputs.runmode == 'selenoid'
+        run: mvn clean test -Dselenide.browser=com.providers.SelenoidDriverProvider --no-transfer-progress
+
+      - name: Maven Test
+        if: github.event.inputs.runmode == 'browserstack'
+        run: mvn clean test -Dselenide.browser=com.providers.BrowserstackDriverProvider --no-transfer-progress
 
       - name: Read value from Properties-file
         id: read_property
