@@ -26,14 +26,14 @@ public class BrowserstackDriverProvider implements WebDriverProvider {
     HashMap<String, Object> browserstackOptions = new HashMap<>();
     browserstackOptions.put("os", "Windows");
     browserstackOptions.put("osVersion", "10");
-    browserstackOptions.put("projectName", "Selenium Automation Project");
-    browserstackOptions.put("buildName", "Smoke");
-    browserstackOptions.put("sessionName", "Menu Check");
+    browserstackOptions.put("projectName", "Selenium-On-Steroids");
+    browserstackOptions.put("buildName", "Some Build Name");
+    browserstackOptions.put("sessionName", "Portfolio Test");
     browserstackOptions.put("local", "false");
     mutableCapabilities.setCapability("bstack:options", browserstackOptions);
     return new RemoteWebDriver(
         new URL("https://" + BROWSERSTACK_USERNAME + ":" + BROWSERSTACK_ACCESS_KEY
-                    + "@hub-cloud.browserstack.com/wd/hub"),
+            + "@hub-cloud.browserstack.com/wd/hub"),
         mutableCapabilities);
   }
 }

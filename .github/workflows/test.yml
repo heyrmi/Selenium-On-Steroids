@@ -41,7 +41,7 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
-        run: mvn clean test -Dselenide.browser=com.providers.SelenoidDriverProvider --no-transfer-progress
+        run: mvn clean test -Dselenide.browser=org.heyrmi.providers.SelenoidDriverProvider --no-transfer-progress
 
       - name: Read value from Properties-file
         id: read_property
@@ -53,6 +53,13 @@ jobs:
       - name: Result Sending
         if: steps.read_property.outputs.sendallureresults == 'yes'
         run: bash sendResultsSecurely.sh
+
+      - name: Upload Allure Results
+        if: steps.read_property.outputs.sendallureresults == 'no'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Allure-Results
+          path: ./allure-results
 
       - name: Send Slack Message
         # Will contain Allure Reports URL in the data block

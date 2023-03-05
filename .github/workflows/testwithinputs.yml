@@ -45,11 +45,11 @@ jobs:
 
       - name: Maven Test
         if: github.event.inputs.runmode == 'selenoid'
-        run: mvn clean test -Dselenide.browser=com.providers.SelenoidDriverProvider --no-transfer-progress
+        run: mvn clean test -Dselenide.browser=org.heyrmi.providers.SelenoidDriverProvider --no-transfer-progress
 
       - name: Maven Test
         if: github.event.inputs.runmode == 'browserstack'
-        run: mvn clean test -Dselenide.browser=com.providers.BrowserstackDriverProvider --no-transfer-progress
+        run: mvn clean test -Dselenide.browser=org.heyrmi.providers.BrowserstackDriverProvider --no-transfer-progress
 
       - name: Read value from Properties-file
         id: read_property
@@ -65,3 +65,10 @@ jobs:
       - name: Sending Results
         if: steps.allure-results.outputs.ALLURE_RESULTS == 'yes'
         run: bash sendResultsSecurely.sh
+
+      - name: Upload Allure Results
+        if: steps.allure-results.outputs.ALLURE_RESULTS == 'no'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Allure-Results
+          path: ./allure-results
