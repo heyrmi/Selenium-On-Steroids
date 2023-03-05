@@ -8,12 +8,11 @@ import org.heyrmi.pages.portfolio.HomePage;
 import org.heyrmi.urls.URL;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.heyrmi.RemoteExecution;
 
 import static com.codeborne.selenide.Selenide.open;
 
-@ExtendWith({ TextReportExtension.class, RemoteExecution.class })
-public class PortfolioTest {
+@ExtendWith({ TextReportExtension.class })
+class PortfolioTest {
 
     @BeforeEach
     void setUp() {
