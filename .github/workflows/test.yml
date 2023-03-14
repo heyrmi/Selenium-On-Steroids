@@ -62,6 +62,7 @@ jobs:
           path: ./allure-results
 
       - name: Send Slack Message
+        if: ${{ github.event_name == 'push' }}
         # Will contain Allure Reports URL in the data block
         run: >
           curl -X POST -H 'Content-type: application/json' 
