@@ -2,6 +2,7 @@ package org.heyrmi.config;
 
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
+import org.aeonbits.owner.Config.DefaultValue;
 import org.aeonbits.owner.Config.LoadType;
 
 @Config.LoadPolicy(LoadType.MERGE)
@@ -17,4 +18,7 @@ public interface Configuration extends Config {
 
     @DefaultValue("no")
     String sendallureresults();
+
+    @DefaultValue("yes")
+    String publishallureresults();
 }
