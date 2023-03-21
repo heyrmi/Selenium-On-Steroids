@@ -10,6 +10,11 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  actions: read
+  contents: write
+  pages: write
+
 env:
   BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
   BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
@@ -48,23 +53,49 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: "./src/test/resources/config.properties"
-          properties: "sendallureresults"
+          properties: "sendallureresults publishallureresults"
 
       - name: Result Sending
         if: steps.read_property.outputs.sendallureresults == 'yes'
         run: bash sendResultsSecurely.sh
 
       - name: Upload Allure Results
-        if: steps.read_property.outputs.sendallureresults == 'no'
+        if: ${{ (steps.read_property.outputs.sendallureresults == 'no') && (steps.read_property.outputs.publishallureresults == 'no') }}
         uses: actions/upload-artifact@v3
         with:
           name: Allure-Results
           path: ./allure-results
 
+      - name: Get gh-pages
+        uses: actions/checkout@v2
+        if: steps.read_property.outputs.publishallureresults == 'yes'
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Allure History
+        if: steps.read_property.outputs.publishallureresults == 'yes'
+        uses: simple-elf/allure-report-action@master
+        id: allure-report
+        with:
+          allure_results: ./allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Deploy report
+        if: steps.read_property.outputs.publishallureresults == 'yes'
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+
       - name: Send Slack Message
         if: ${{ github.event_name == 'push' }}
-        # Will contain Allure Reports URL in the data block
+        # Contains Latest Allure Reports URL in the data block
         run: >
           curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":test: Test completed"}' 
+          --data '{"text":"Test completed and latest report pushed to GitHub Pages: heyrmi.github.io/Selenium-On-Steroids/${{ github.run_number }}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
