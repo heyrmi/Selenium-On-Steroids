@@ -86,7 +86,7 @@ jobs:
 
       - name: Deploy report
         if: steps.read_property.outputs.publishallureresults == 'yes'
-        uses: peaceiris/actions-gh-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
