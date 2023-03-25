@@ -67,7 +67,7 @@ jobs:
           path: ./allure-results
 
       - name: Get gh-pages
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: steps.read_property.outputs.publishallureresults == 'yes'
         continue-on-error: true
         with:
