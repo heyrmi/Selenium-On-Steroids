@@ -1,0 +1,1 @@
+[{"uid":"17d5b6c107d51013","name":"Smoke Test of Portfolio Website","time":{"start":1682207891700,"stop":1682207896050,"duration":4350},"status":"passed","severity":"normal"},{"uid":"fe2d660b5f0baf36","name":"Regression Test of Portfolio Website","time":{"start":1682207891700,"stop":1682207896478,"duration":4778},"status":"passed","severity":"normal"}]
