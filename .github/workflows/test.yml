@@ -86,11 +86,10 @@ jobs:
 
       - name: Deploy report
         if: steps.read_property.outputs.publishallureresults == 'yes'
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
 
       - name: Send Slack Message
         if: ${{ github.event_name == 'push' }}
