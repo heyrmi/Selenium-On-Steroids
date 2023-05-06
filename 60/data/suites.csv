@@ -1,0 +1,3 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Sat May 06 23:58:16 GMT 2023","Sat May 06 23:58:21 GMT 2023","4436","","org.heyrmi.portfolio.PortfolioTest","","org.heyrmi.portfolio.PortfolioTest","smokeTestPortfolioWebsite","Smoke Test of Portfolio Website",""
+"passed","Sat May 06 23:58:16 GMT 2023","Sat May 06 23:58:21 GMT 2023","4869","","org.heyrmi.portfolio.PortfolioTest","","org.heyrmi.portfolio.PortfolioTest","regressionTestPortfolioWebsite","Regression Test of Portfolio Website",""
