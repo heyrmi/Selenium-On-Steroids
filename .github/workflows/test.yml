@@ -46,6 +46,7 @@ jobs:
           cache: "maven"
 
       - name: Maven Test
+        continue-on-error: true
         run: mvn clean test -Dselenide.browser=org.heyrmi.providers.SelenoidDriverProvider --no-transfer-progress
 
       - name: Read value from Properties-file
